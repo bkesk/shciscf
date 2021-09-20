@@ -1096,6 +1096,7 @@ def writeSHCIConfFile(SHCI, nelec, Restart):
 
     f.write("davidsonTol %g\n" % SHCI.davidsonTol)
     f.write("dE %g\n" % SHCI.dE)
+    
 
     # Sets maxiter to 6 more than the last iter in sweep_iter[] if restarted.
     if not Restart:
@@ -1129,8 +1130,14 @@ def writeSHCIConfFile(SHCI, nelec, Restart):
     for line in SHCI.extraline:
         f.write("%s\n" % line)
 
+    for extra in SHCI.shci_extra_keyword: # KE: adding in a use for extra keywords
+        key, value = extra
+        f.write(f"{key} {value}\n")
+
     f.write("\n")  # SHCI requires that there is an extra line.
     f.close()
+
+ 
 
 
 def D2htoDinfh(SHCI, norb, nelec):
