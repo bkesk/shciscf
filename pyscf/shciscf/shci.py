@@ -1579,6 +1579,27 @@ def writeSOCIntegrals(
     print1Int(h1, "SOC")
 
 
+def write_soc_ecp_integrals(mc,ncasorbs=None):
+    '''
+    Write SOC-ECP integrals based on the mol object in 'mc'.
+
+    This should be compatible with CASSCF with DICE as the solver.
+    Dice should simply sample the spin-flips and return a linear
+    combination of RDets.
+    May need to ensure that the CASSCF calculation will allow the spin
+    state to change.
+    '''
+    
+    h1ao = mc.mol.intor('ECPso') # No factor of 0.5 ! Dice will handle that internally!!
+
+    ncore = mc.ncore
+    ncas = ncasorbs
+
+    mo_coeff = mc.mo_coeff
+    h1 = numpy.einsum("xpq,pi,qj->xij", h1ao, mo_coeff, mo_coeff)[:, ncore:ncore + ncas, ncore:ncore + ncas]
+    print1Int(h1, "SOC")
+
+
 def dryrun(mc, mo_coeff=None):
     """
     Generate FCIDUMP and SHCI input.dat file for a give multiconfigurational 
